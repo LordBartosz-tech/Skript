@@ -1,6 +1,8 @@
 options:
 #Wiadomość gdy gracz nie ma permisji
     NoPerm: &cNie posiadasz uprawnień &7(%{_permission}%&7)
+#Prefix przed każdą wiadomością
+    MessagePrefix: &8»
 
 
 function NoPermission(p: player, permission: text) :: boolean:
@@ -11,4 +13,4 @@ function NoPermission(p: player, permission: text) :: boolean:
         return true
 
 function sendMessage(p: player, message: text):
-    send "&8» %{_message}%" to {_p}
+    send "{@MessagePrefix} %{_message}%" to {_p}
