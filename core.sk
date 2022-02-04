@@ -1,0 +1,14 @@
+options:
+#Wiadomość gdy gracz nie ma permisji
+    NoPerm: &cNie posiadasz uprawnień &7(%{_permission}%&7)
+
+
+function NoPermission(p: player, permission: text) :: boolean:
+    if {_p} doesn't have permission "%{_permission}%":
+        sendMessage({_p}, "{@NoPerm}")
+        return false
+    else:
+        return true
+
+function sendMessage(p: player, message: text):
+    send "&8» %{_message}%" to {_p}
