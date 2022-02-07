@@ -1,10 +1,14 @@
 options:
-#Wiadomość gdy gracz nie ma permisji
+# Wiadomość gdy gracz nie ma permisji
     NoPerm: &cNie posiadasz uprawnień &7(%{_permission}%&7)
-#Prefix przed każdą wiadomością
+# Prefix przed każdą wiadomością
     MessagePrefix: &8»
+# Czy wysyłać prefix przed wiadomością?
+    PrefixEnabled: true
 
-
+# Usage: 
+# if NoPermission(player, "core.premisja") is false:
+#     stop
 function NoPermission(p: player, permission: text) :: boolean:
     if {_p} doesn't have permission "%{_permission}%":
         sendMessage({_p}, "{@NoPerm}")
@@ -12,5 +16,46 @@ function NoPermission(p: player, permission: text) :: boolean:
     else:
         return true
 
+# Usage: sendMessage(player, "Wiadomość")
 function sendMessage(p: player, message: text):
-    send "{@MessagePrefix} %{_message}%" to {_p}
+    if {@PrefixEnabled} is true:
+        send "{@MessagePrefix} %{_message}%" to {_p}
+    else:
+        send "%{_message}%" to {_p}
+
+# Usage: TeleportPlayer(player, {_location}, "nazwa", 5, 3, 2)
+function TeleportPlayer(p: player, loc: object, name: text, TimeDefault: number, TimeVip: number, TimeSVIP: number):
+    set {_location} to location of {_p}
+    if {_p} has permission "core.Teleport.Owner":
+        teleport {_p} to {_loc}
+        send "&8&l» &aZostales przeniesiony do &9&l%{_name}%" to {_p}
+    else if {_p} has permission "core.Teleport.SVIP":
+        send "&8&l» &aTeleportacja nastapi za &9&l%{_TimeSVIP}% &9&lsekund" to {_p}
+        loop {_TimeSVIP} times:
+            if distance between {_location} and {_p}'s location <= 0.1:
+                wait 1 second
+            else:
+                send "&8&l» &cPoruszyles sie! Teleportacja zostala przerwana" to {_p}
+                stop
+        teleport {_p} to {_loc}
+        send "&8&l» &aZostales przeniesiony do &9&l%{_name}%" to {_p}
+    else if {_p} has permission "core.Teleport.VIP":
+        send "&8&l» &aTeleportacja nastapi za &9&l%{_TimeVip}% &9&lsekund" to {_p}
+        loop {_TimeVip} times:
+            if distance between {_location} and {_p}'s location <= 0.1:
+                wait 1 second
+            else:
+                send "&8&l» &cPoruszyles sie! Teleportacja zostala przerwana" to {_p}
+                stop
+        teleport {_p} to {_loc}
+        send "&8&l» &aZostales przeniesiony do &9&l%{_name}%" to {_p}
+    else:
+        send "&8&l» &aTeleportacja nastapi za &9&l%{_TimeDefault}% &9&lsekund" to {_p}
+        loop {_TimeDefault} times:
+            if distance between {_location} and {_p}'s location <= 0.1:
+                wait 1 second
+            else:
+                send "&8&l» &cPoruszyles sie! Teleportacja zostala przerwana" to {_p}
+                stop
+        teleport {_p} to {_loc}
+        send "&8&l» &aZostales przeniesiony do &9&l%{_name}%" to {_p}
